@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { Inject, Injectable } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
 import { RatingFactoryService } from 'src/price/rating-factory/rating-factory.service';
 
 const CENTRAL_API_URL = 'http://central-api:3000';
@@ -10,8 +9,7 @@ export class PriceService {
   constructor(private readonly ratingFactoryService: RatingFactoryService) {}
 
   async processRating(parsedData: any): Promise<string> {
-    console.log('2. Process rating');
-    const car = this.ratingFactoryService.create(parsedData);
+    const car = await this.ratingFactoryService.create(parsedData);
     car.process(parsedData);
 
     return 'Rating will be processed';
@@ -36,7 +34,7 @@ export class PriceService {
       });
       return response.data;
     } catch (error) {
-      console.log('Error while parsing url');
+      console.log(`Error while parsing url with parser-api: ${url}`);
     }
   }
 }

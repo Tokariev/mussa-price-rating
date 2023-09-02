@@ -5,6 +5,9 @@ import { CarWithoutRating } from './car-without-rating';
 import { CarIsNotAvailableNow } from './car-is-not-available-now';
 import { CarWitVeryGoodPrice } from './car-with-very-good-price';
 import { CarHasNotVeryGoodPrice } from './car-has-not-very-good-price';
+import { CarHasRating } from './car-has-rating-already';
+import { CarIsAvailable } from './car-is-available';
+import { NullCar } from './null-car-object';
 
 @Injectable()
 export class RatingFactoryService {
@@ -17,16 +20,36 @@ export class RatingFactoryService {
     private readonly carWitVeryGoodPrice: CarWitVeryGoodPrice,
     @Inject(CarHasNotVeryGoodPrice)
     private readonly carHasNotVeryGoodPrice: CarHasNotVeryGoodPrice,
+    @Inject(CarHasRating)
+    private readonly carHasRating: CarHasRating,
+    @Inject(CarIsAvailable)
+    private readonly carIsAvailable: CarIsAvailable,
+    @Inject(NullCar)
+    private readonly nullCar: NullCar,
   ) {}
 
-  create(car: any): ICar {
+  async create(car: any): Promise<ICar> {
     const substrings = ['mobile.de', 'autoscout24'];
+
+    if (!car) {
+      return this.nullCar;
+    }
+
+    if (this.isRatingExists(car)) {
+      return this.carHasRating;
+    }
 
     if (!substrings.some((substr) => car.source.includes(substr))) {
       return this.carWithoutRating;
     }
 
-    if (car.url.includes('hs-preview.cardeluxe.net')) {
+    const isCarOnline = await this.isCarOnline(car);
+
+    if (car.url.includes('hs-preview.cardeluxe.net') && isCarOnline) {
+      return this.carIsAvailable;
+    }
+
+    if (car.url.includes('hs-preview.cardeluxe.net') && !isCarOnline) {
       return this.carIsNotAvailableNow;
     }
 
@@ -41,16 +64,20 @@ export class RatingFactoryService {
   }
 
   async isCarOnline(car: any): Promise<boolean> {
-    // Get response status code
-    const response = await axios.get(car.source, {
-      validateStatus: function (status) {
-        return status < 500; // Reject only if the status code is greater than or equal to 500
-      },
-    });
-    const statusCode = response.status;
+    console.log('Is car online?', car.source);
 
-    // If status code is 404, then the ad is deleted
-    if (statusCode === 404) {
+    try {
+      const response = await axios.get(car.source);
+      console.log('V - online:', response.status);
+      return true;
+    } catch (error) {
+      console.log('X - offline:', error.response.status);
+      return false;
+    }
+  }
+
+  isRatingExists(car: any): boolean {
+    if (car?.price_rating) {
       return true;
     }
 

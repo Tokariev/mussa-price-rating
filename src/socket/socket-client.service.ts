@@ -3,7 +3,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Socket, io } from 'socket.io-client';
-import { PriceService } from 'src/price/price.service';
+import { PriceService } from '../price/price.service';
 
 const socketUrl = io('http://central-api:3000');
 
@@ -25,7 +25,6 @@ export class SocketClientService implements OnModuleInit {
     });
 
     this.socketClient.on('onCarReceived', (data) => {
-      console.log('1. Car received');
       this.priceService.processRating(data);
     });
   }

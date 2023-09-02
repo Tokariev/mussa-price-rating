@@ -1,7 +1,7 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
 import { PriceService } from 'src/price/price.service';
-
+import { EventEmitter2 } from '@nestjs/event-emitter';
 interface IInactiveCar {
   id: string;
   source: string;
@@ -13,12 +13,9 @@ export class InactiveCarsConsumer {
 
   @Process('parse')
   async parse(job: Job<IInactiveCar>) {
-    console.log('Start job to parse car');
-
-    const { id, source } = job.data;
+    const { source } = job.data;
 
     const parsedData = await this.priceService.parseUrl(source);
-
     this.priceService.processRating(parsedData);
   }
 }
