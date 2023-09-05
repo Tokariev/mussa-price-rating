@@ -53,14 +53,7 @@ export class RatingFactoryService {
       return this.carIsNotAvailableNow;
     }
 
-    if (
-      substrings.some((substr) => car.source.includes(substr)) &&
-      car.price_rating === 'VERY_GOOD_PRICE'
-    ) {
-      return this.carWitVeryGoodPrice;
-    }
-
-    return this.carHasNotVeryGoodPrice;
+    return this.carWithoutRating;
   }
 
   async isCarOnline(car: any): Promise<boolean> {

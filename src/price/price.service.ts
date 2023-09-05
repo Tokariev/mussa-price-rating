@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 import { Injectable } from '@nestjs/common';
 import { RatingFactoryService } from 'src/price/rating-factory/rating-factory.service';
 
@@ -29,12 +30,16 @@ export class PriceService {
 
   async parseUrl(url: string): Promise<any> {
     try {
-      const response = await axios.post('http://parser-api:5000/parse', {
-        url: url,
-      });
+      const response = await axios.post(
+        'http://central-api:3000/api/parser/parse-not-emmit',
+        {
+          url: url,
+        },
+      );
+      console.log(`ooo... Parsed ${url}`);
       return response.data;
     } catch (error) {
-      console.log(`Error while parsing url with parser-api: ${url}`);
+      console.log(`.Error to parse: ${url}`);
     }
   }
 }

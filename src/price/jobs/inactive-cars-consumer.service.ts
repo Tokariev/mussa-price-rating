@@ -1,7 +1,7 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
 import { PriceService } from 'src/price/price.service';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+
 interface IInactiveCar {
   id: string;
   source: string;

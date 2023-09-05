@@ -29,7 +29,10 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/websockets": "^10.2.1",
     "axios": "^1.5.0",
+    "axios-retry": "^3.7.0",
     "bull": "^4.11.3",
+    "cheerio": "^1.0.0-rc.12",
+    "node-html-parser": "^6.1.6",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "socket.io-client": "^4.7.2"

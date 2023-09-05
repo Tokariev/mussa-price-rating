@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { PriceService } from './price.service';
 import { CarWithoutRating } from './rating-factory/car-without-rating';
-
 import { CarWitVeryGoodPrice } from './rating-factory/car-with-very-good-price';
 import { CarIsNotAvailableNow } from './rating-factory/car-is-not-available-now';
 import { CarHasNotVeryGoodPrice } from './rating-factory/car-has-not-very-good-price';
