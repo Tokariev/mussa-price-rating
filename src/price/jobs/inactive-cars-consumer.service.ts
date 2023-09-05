@@ -1,6 +1,6 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { PriceService } from 'src/price/price.service';
+import { PriceService } from '../price.service';
 
 interface IInactiveCar {
   id: string;

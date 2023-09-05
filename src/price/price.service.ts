@@ -1,7 +1,6 @@
 import axios from 'axios';
-import axiosRetry from 'axios-retry';
 import { Injectable } from '@nestjs/common';
-import { RatingFactoryService } from 'src/price/rating-factory/rating-factory.service';
+import { RatingFactoryService } from '../price/rating-factory/rating-factory.service';
 
 const CENTRAL_API_URL = 'http://central-api:3000';
 
@@ -11,7 +10,8 @@ export class PriceService {
 
   async processRating(parsedData: any): Promise<string> {
     const car = await this.ratingFactoryService.create(parsedData);
-    car.process(parsedData);
+
+    console.log('Get instanceof from 🏭');
 
     return 'Rating will be processed';
   }
@@ -36,10 +36,16 @@ export class PriceService {
           url: url,
         },
       );
-      console.log(`ooo... Parsed ${url}`);
+      console.log(
+        `ooo... ${response.data.brand} ${response.data.price_rating}`,
+      );
       return response.data;
     } catch (error) {
       console.log(`.Error to parse: ${url}`);
+
+      if (error.traceback) {
+        console.log(error.traceback);
+      }
     }
   }
 }

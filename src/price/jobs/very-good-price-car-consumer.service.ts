@@ -1,6 +1,6 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { Job, JobInformation, Queue } from 'bull';
-import { PriceService } from 'src/price/price.service';
+import { PriceService } from '../../price/price.service';
 
 interface IVeryGoodPriceCar {
   documentId: string;

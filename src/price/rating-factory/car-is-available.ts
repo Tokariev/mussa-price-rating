@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ICar } from './interfaces/car.interface';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PriceRatingDto } from '../dto/price-rating-dto';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 @Injectable()
 export class CarIsAvailable implements ICar {
   constructor(private readonly eventEmitter: EventEmitter2) {}
@@ -19,7 +19,9 @@ export class CarIsAvailable implements ICar {
         },
       );
 
-      console.log(`ccc... Parsed ${response.data.price_rating}`);
+      console.log(
+        `***... Parsed ${response.data.brand} ${response.data.price_rating}`,
+      );
 
       this.eventEmitter.emit('onRatingProcessed', {
         id: car.id,

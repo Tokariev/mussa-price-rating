@@ -3,8 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ICar } from './interfaces/car.interface';
 import { CarWithoutRating } from './car-without-rating';
 import { CarIsNotAvailableNow } from './car-is-not-available-now';
-import { CarWitVeryGoodPrice } from './car-with-very-good-price';
-import { CarHasNotVeryGoodPrice } from './car-has-not-very-good-price';
 import { CarHasRating } from './car-has-rating-already';
 import { CarIsAvailable } from './car-is-available';
 import { NullCar } from './null-car-object';
@@ -16,10 +14,6 @@ export class RatingFactoryService {
     private readonly carWithoutRating: CarWithoutRating,
     @Inject(CarIsNotAvailableNow)
     private readonly carIsNotAvailableNow: CarIsNotAvailableNow,
-    @Inject(CarWitVeryGoodPrice)
-    private readonly carWitVeryGoodPrice: CarWitVeryGoodPrice,
-    @Inject(CarHasNotVeryGoodPrice)
-    private readonly carHasNotVeryGoodPrice: CarHasNotVeryGoodPrice,
     @Inject(CarHasRating)
     private readonly carHasRating: CarHasRating,
     @Inject(CarIsAvailable)
@@ -33,6 +27,10 @@ export class RatingFactoryService {
 
     if (!car) {
       return this.nullCar;
+    }
+
+    if (!car.source) {
+      throw new Error('Car has no source');
     }
 
     if (this.isRatingExists(car)) {
