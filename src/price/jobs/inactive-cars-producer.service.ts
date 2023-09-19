@@ -12,14 +12,14 @@ export class InactiveCarProducerService {
   async processCarInOneMinute(car: any) {
     console.log('Produce job to check car in one minute');
 
-    const oneMinute = 60000;
+    const fiftySeconds = 50000;
 
     const job = await this.inactiveCarsQueue.add(
       'parse',
       {
         source: car.source,
       },
-      { delay: oneMinute, removeOnComplete: true }, // 3 seconds delayed
+      { delay: fiftySeconds, removeOnComplete: true }, // 3 seconds delayed
     );
 
     console.log(`Job created with id: ${job.id}`);

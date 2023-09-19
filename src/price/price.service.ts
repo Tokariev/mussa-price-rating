@@ -10,8 +10,8 @@ export class PriceService {
 
   async processRating(parsedData: any): Promise<string> {
     const car = await this.ratingFactoryService.create(parsedData);
-
     console.log('Get instanceof from 🏭');
+    car.process(parsedData);
 
     return 'Rating will be processed';
   }
@@ -36,9 +36,9 @@ export class PriceService {
           url: url,
         },
       );
-      console.log(
-        `ooo... ${response.data.brand} ${response.data.price_rating}`,
-      );
+
+      console.log(`...Parsed ✅`);
+
       return response.data;
     } catch (error) {
       console.log(`.Error to parse: ${url}`);

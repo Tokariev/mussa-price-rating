@@ -19,9 +19,7 @@ export class CarIsAvailable implements ICar {
         },
       );
 
-      console.log(
-        `***... Parsed ${response.data.brand} ${response.data.price_rating}`,
-      );
+      console.log(`...Parsed ✅`);
 
       this.eventEmitter.emit('onRatingProcessed', {
         id: car.id,
@@ -30,6 +28,10 @@ export class CarIsAvailable implements ICar {
     } catch (error) {
       console.log(`*Error while parsing url: ${car.source}`);
       console.log(error.message);
+
+      if (error.response.data.traceback) {
+        console.log('Parse not emmit error:', error.response.data.traceback);
+      }
     }
   }
 }
