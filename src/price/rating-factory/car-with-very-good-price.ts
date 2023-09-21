@@ -8,10 +8,11 @@ export class CarWitVeryGoodPrice implements ICar {
   constructor(private eventEmitter: EventEmitter2) {}
 
   async process(car: CarType): Promise<void> {
-    this.eventEmitter.emit('onRatingProcessed', {
+    const priceRating: PriceRatingDto = {
       id: car.id,
-      price_rating: car.price_rating,
       price_rating_object: car.price_rating_object,
-    } as PriceRatingDto);
+    };
+
+    this.eventEmitter.emit('onRatingProcessed', priceRating);
   }
 }

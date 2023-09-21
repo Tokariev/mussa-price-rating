@@ -13,7 +13,7 @@ export class CarIsAvailable implements ICar {
 
     try {
       const response = await axios.post(
-        'http://central-api:3000/api/parser/parse-not-emmit',
+        'http://central-api:3000/api/parser/parse-not-emit',
         {
           url: car.source,
         },
@@ -21,11 +21,12 @@ export class CarIsAvailable implements ICar {
 
       console.log(`...Parsed ✅`);
 
-      this.eventEmitter.emit('onRatingProcessed', {
+      const priceRating: PriceRatingDto = {
         id: car.id,
-        price_rating: response.data.price_rating,
         price_rating_object: response.data.price_rating_object,
-      } as PriceRatingDto);
+      };
+
+      this.eventEmitter.emit('onRatingProcessed', priceRating);
     } catch (error) {
       console.log(`*Error while parsing url: ${car.source}`);
       console.log(error.message);

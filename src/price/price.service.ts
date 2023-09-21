@@ -32,7 +32,7 @@ export class PriceService {
   async parseUrl(url: string): Promise<any> {
     try {
       const response = await axios.post(
-        'http://central-api:3000/api/parser/parse-not-emmit',
+        'http://central-api:3000/api/parser/parse-not-emit',
         {
           url: url,
         },
