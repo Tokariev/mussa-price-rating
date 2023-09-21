@@ -6,6 +6,7 @@ import { CarIsNotAvailableNow } from './car-is-not-available-now';
 import { CarHasRating } from './car-has-rating-already';
 import { CarIsAvailable } from './car-is-available';
 import { NullCar } from './null-car-object';
+import { CarType } from './interfaces/car.type';
 
 @Injectable()
 export class RatingFactoryService {
@@ -22,7 +23,7 @@ export class RatingFactoryService {
     private readonly nullCar: NullCar,
   ) {}
 
-  async create(car: any): Promise<ICar> {
+  async create(car: CarType): Promise<ICar> {
     const substrings = ['mobile.de', 'autoscout24'];
 
     if (!car) {
@@ -54,7 +55,7 @@ export class RatingFactoryService {
     return this.carWithoutRating;
   }
 
-  async isCarOnline(car: any): Promise<boolean> {
+  async isCarOnline(car: CarType): Promise<boolean> {
     console.log('Is car online?', car.source);
 
     try {
@@ -67,7 +68,7 @@ export class RatingFactoryService {
     }
   }
 
-  isRatingExists(car: any): boolean {
+  isRatingExists(car: CarType): boolean {
     if (car?.price_rating) {
       return true;
     }

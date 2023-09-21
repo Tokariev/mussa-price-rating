@@ -13,6 +13,7 @@ import { NullCar } from '../null-car-object';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BullModule } from '@nestjs/bull';
 import axios from 'axios';
+import { CarType } from '../interfaces/car.type';
 
 describe('RatingFactoryService', () => {
   let ratingFactoryService: RatingFactoryService;
@@ -64,7 +65,9 @@ describe('RatingFactoryService', () => {
   });
 
   it('should return carWithoutRating when car has no source', async () => {
-    const car = {
+    const car: CarType = {
+      id: '123',
+      url: 'https://www.mobile.de/mock-car',
       source: null,
     };
     await expect(ratingFactoryService.create(car)).rejects.toThrowError(
@@ -74,6 +77,8 @@ describe('RatingFactoryService', () => {
 
   it('should return carHasRating when car has price rating', async () => {
     const car = {
+      id: '123',
+      url: 'https://www.mobile.de/mock-car',
       source: 'https://www.mobile.de/123',
       price_rating: 'VERY_GOOD_PRICE',
     };
@@ -83,6 +88,8 @@ describe('RatingFactoryService', () => {
 
   it('should return carWithoutRating when car source does not contain substrings', async () => {
     const car = {
+      id: '123',
+      url: 'https://www.mobile.de/mock-car',
       source: 'kleinanzeigen.ebay.de/123',
     };
     const result = await ratingFactoryService.create(car);
@@ -91,6 +98,7 @@ describe('RatingFactoryService', () => {
 
   it('should return carIsAvailable when car URL contains "hs-preview.cardeluxe.net" and is online', async () => {
     const car = {
+      id: '123',
       url: 'https://hs-preview.cardeluxe.net/car',
       source: 'https://www.mobile.de/123',
     };
@@ -102,6 +110,7 @@ describe('RatingFactoryService', () => {
 
   it('should return carIsNotAvailableNow when car URL contains "hs-preview.cardeluxe.net" and is offline', async () => {
     const car = {
+      id: '123',
       url: 'https://hs-preview.cardeluxe.net/car',
       source: 'https://www.mobile.de/123',
     };
@@ -116,6 +125,8 @@ describe('RatingFactoryService', () => {
       // Mock axios.get to return a successful response
       axios.get = jest.fn().mockResolvedValue({ status: 200 });
       const car = {
+        id: '123',
+        url: 'https://hs-preview.cardeluxe.net/mock-car',
         source: 'https://example.com',
       };
       const result = await ratingFactoryService.isCarOnline(car);
@@ -126,6 +137,8 @@ describe('RatingFactoryService', () => {
       // Mock axios.get to throw an error (simulate offline)
       axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
       const car = {
+        id: '123',
+        url: 'https://hs-preview.cardeluxe.net/mock-car',
         source: 'https://example.com',
       };
       const result = await ratingFactoryService.isCarOnline(car);
@@ -136,6 +149,9 @@ describe('RatingFactoryService', () => {
   describe('isRatingExists', () => {
     it('should return true when car has a price rating', () => {
       const car = {
+        id: '123',
+        url: 'https://hs-preview.cardeluxe.net/mock-car',
+        source: 'https://www.mobile.de/mock-car',
         price_rating: 'VERY_GOOD_PRICE',
       };
       const result = ratingFactoryService.isRatingExists(car);
@@ -144,6 +160,9 @@ describe('RatingFactoryService', () => {
 
     it('should return false when car has no price rating', () => {
       const car = {
+        id: '123',
+        url: 'https://hs-preview.cardeluxe.net/mock-car',
+        source: 'https://www.mobile.de/mock-car',
         price_rating: null,
       };
       const result = ratingFactoryService.isRatingExists(car);

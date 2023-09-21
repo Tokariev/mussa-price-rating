@@ -24,6 +24,7 @@ export class CarIsAvailable implements ICar {
       this.eventEmitter.emit('onRatingProcessed', {
         id: car.id,
         price_rating: response.data.price_rating,
+        price_rating_object: response.data.price_rating_object,
       } as PriceRatingDto);
     } catch (error) {
       console.log(`*Error while parsing url: ${car.source}`);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 import { RatingFactoryService } from '../price/rating-factory/rating-factory.service';
+import { CarType } from './rating-factory/interfaces/car.type';
 
 const CENTRAL_API_URL = 'http://central-api:3000';
 
@@ -8,7 +9,7 @@ const CENTRAL_API_URL = 'http://central-api:3000';
 export class PriceService {
   constructor(private readonly ratingFactoryService: RatingFactoryService) {}
 
-  async processRating(parsedData: any): Promise<string> {
+  async processRating(parsedData: CarType): Promise<string> {
     const car = await this.ratingFactoryService.create(parsedData);
     console.log('Get instanceof from 🏭');
     car.process(parsedData);

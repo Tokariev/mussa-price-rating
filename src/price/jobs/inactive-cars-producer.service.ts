@@ -1,7 +1,7 @@
 import { InjectQueue, Process } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
-
+import { CarType } from '../rating-factory/interfaces/car.type';
 @Injectable()
 export class InactiveCarProducerService {
   constructor(
@@ -9,7 +9,7 @@ export class InactiveCarProducerService {
     private readonly inactiveCarsQueue: Queue,
   ) {}
 
-  async processCarInOneMinute(car: any) {
+  async processCarInOneMinute(car: CarType) {
     console.log('Produce job to check car in one minute');
 
     const fiftySeconds = 50000;

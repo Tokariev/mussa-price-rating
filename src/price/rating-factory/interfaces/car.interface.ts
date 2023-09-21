@@ -1,3 +1,5 @@
+import { CarType } from './car.type';
+
 export interface ICar {
-  process(car: any): Promise<void>;
+  process(car: CarType): Promise<void>;
 }
