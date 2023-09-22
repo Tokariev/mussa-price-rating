@@ -26,6 +26,10 @@ export class CarIsAvailable implements ICar {
         price_rating_object: response.data.price_rating_object,
       };
 
+      console.log(
+        `Emit CarIsAvailable ${priceRating.price_rating_object.rating}`,
+      );
+
       this.eventEmitter.emit('onRatingProcessed', priceRating);
     } catch (error) {
       console.log(`*Error while parsing url: ${car.source}`);

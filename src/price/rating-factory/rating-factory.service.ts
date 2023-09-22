@@ -69,7 +69,7 @@ export class RatingFactoryService {
   }
 
   isRatingExists(car: CarType): boolean {
-    if (car?.price_rating) {
+    if (car?.price_rating_object?.rating) {
       return true;
     }
 
