@@ -64,7 +64,7 @@ describe('RatingFactoryService', () => {
     });
   });
 
-  it('should return carWithoutRating when car has no source', async () => {
+  it('should return carWithoutRating, because the car has no source', async () => {
     const car: CarType = {
       id: '123',
       url: 'https://www.mobile.de/mock-car',
