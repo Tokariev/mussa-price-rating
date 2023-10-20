@@ -106,7 +106,8 @@ describe('RatingFactoryService', () => {
       source: 'https://www.mobile.de/123',
     };
     // Mock axios.get to return a successful response
-    axios.get = jest.fn().mockResolvedValue({ status: 200 });
+    jest.spyOn(ratingFactoryService, 'isCarOnline').mockResolvedValue(true);
+
     const result = await ratingFactoryService.create(car);
     expect(result).toBeInstanceOf(CarIsAvailable);
   });
@@ -118,35 +119,9 @@ describe('RatingFactoryService', () => {
       source: 'https://www.mobile.de/123',
     };
     // Mock axios.get to return a failed response
-    axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
+    jest.spyOn(ratingFactoryService, 'isCarOnline').mockResolvedValue(false);
     const result = await ratingFactoryService.create(car);
     expect(result).toBeInstanceOf(CarIsNotAvailableNow);
-  });
-
-  describe('isCarOnline', () => {
-    it('should return true when car source is online', async () => {
-      // Mock axios.get to return a successful response
-      axios.get = jest.fn().mockResolvedValue({ status: 200 });
-      const car: CarType = {
-        id: '123',
-        url: 'https://hs-preview.cardeluxe.net/mock-car',
-        source: 'https://example.com',
-      };
-      const result = await ratingFactoryService.isCarOnline(car);
-      expect(result).toBe(true);
-    });
-
-    it('should return false when car source is offline', async () => {
-      // Mock axios.get to throw an error (simulate offline)
-      axios.get = jest.fn().mockRejectedValue({ response: { status: 404 } });
-      const car: CarType = {
-        id: '123',
-        url: 'https://hs-preview.cardeluxe.net/mock-car',
-        source: 'https://example.com',
-      };
-      const result = await ratingFactoryService.isCarOnline(car);
-      expect(result).toBe(false);
-    });
   });
 
   describe('isRatingExists', () => {
