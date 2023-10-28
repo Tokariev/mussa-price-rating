@@ -10,12 +10,10 @@ export class InactiveCarProducerService {
   ) {}
 
   async processCarInOneMinute(car: CarType) {
-    console.log('Produce job to check car in one minute');
-
     const fiftySeconds = 50000;
 
     const job = await this.inactiveCarsQueue.add(
-      'parse',
+      '/parse-not-emit',
       {
         source: car.source,
       },
@@ -23,7 +21,19 @@ export class InactiveCarProducerService {
     );
 
     console.log(`Job created with id: ${job.id}`);
+  }
 
-    return `Job created with id: ${job.id}`;
+  async processCarIn65Seconds(car: CarType) {
+    const sixtyFiveSeconds = 65000;
+
+    const job = await this.inactiveCarsQueue.add(
+      'parse-and-emit',
+      {
+        source: car.source,
+      },
+      { delay: sixtyFiveSeconds, removeOnComplete: true },
+    );
+
+    console.log(`Job created with id: ${job.id}`);
   }
 }

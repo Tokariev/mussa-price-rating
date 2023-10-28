@@ -11,6 +11,7 @@ import { InactiveCarsConsumer } from './jobs/inactive-cars-consumer.service';
 import { CarHasRating } from './rating-factory/car-has-rating-already';
 import { CarIsAvailable } from './rating-factory/car-is-available';
 import { NullCar } from './rating-factory/null-car-object';
+import { CarWithoutCity } from './rating-factory/car-without-city';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { NullCar } from './rating-factory/null-car-object';
     CarIsAvailable,
     RatingFactoryService,
     CarWithoutRating,
+    CarWithoutCity,
     CarIsNotAvailableNow,
 
     InactiveCarProducerService,

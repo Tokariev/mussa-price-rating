@@ -49,4 +49,14 @@ export class PriceService {
       }
     }
   }
+
+  async parseAndEmit(url: string) {
+    try {
+      axios.post('http://central-api:3000/api/parser', {
+        url: url,
+      });
+    } catch (error) {
+      // Do nothing
+    }
+  }
 }

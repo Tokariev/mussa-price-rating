@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ICar } from './interfaces/car.interface';
 import { CarWithoutRating } from './car-without-rating';
+import { CarWithoutCity } from './car-without-city';
 import { CarIsNotAvailableNow } from './car-is-not-available-now';
 import { CarHasRating } from './car-has-rating-already';
 import { CarIsAvailable } from './car-is-available';
@@ -13,6 +14,8 @@ export class RatingFactoryService {
   constructor(
     @Inject(CarWithoutRating)
     private readonly carWithoutRating: CarWithoutRating,
+    @Inject(CarWithoutCity)
+    private readonly carWithoutCity: CarWithoutCity,
     @Inject(CarIsNotAvailableNow)
     private readonly carIsNotAvailableNow: CarIsNotAvailableNow,
     @Inject(CarHasRating)
@@ -34,6 +37,10 @@ export class RatingFactoryService {
       throw new Error('Car has no source');
     }
 
+    if (this.carHasNoCity(car)) {
+      return this.carWithoutCity;
+    }
+
     if (this.isRatingExists(car)) {
       return this.carHasRating;
     }
@@ -53,6 +60,14 @@ export class RatingFactoryService {
     }
 
     return this.carWithoutRating;
+  }
+
+  carHasNoCity(car: CarType) {
+    if (!car.city && car.source.includes('autoscout24.de')) {
+      return true;
+    }
+
+    return false;
   }
 
   async isCarOnline(car: CarType): Promise<boolean> {

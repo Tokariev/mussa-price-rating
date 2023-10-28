@@ -14,6 +14,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BullModule } from '@nestjs/bull';
 import axios from 'axios';
 import { CarType } from '../interfaces/car.type';
+import { CarWithoutCity } from '../car-without-city';
 
 describe('RatingFactoryService', () => {
   let ratingFactoryService: RatingFactoryService;
@@ -42,6 +43,7 @@ describe('RatingFactoryService', () => {
         CarIsAvailable,
         RatingFactoryService,
         CarWithoutRating,
+        CarWithoutCity,
         CarIsNotAvailableNow,
 
         InactiveCarProducerService,
@@ -69,6 +71,12 @@ describe('RatingFactoryService', () => {
       id: '123',
       url: 'https://www.mobile.de/mock-car',
       source: null,
+      brand: 'BMW',
+      city: 'Berlin',
+      price_rating_object: {
+        rating: 'VERY_GOOD_PRICE',
+        rating_reason: 'Very good price',
+      },
     };
     await expect(ratingFactoryService.create(car)).rejects.toThrowError(
       'Car has no source',
@@ -80,6 +88,8 @@ describe('RatingFactoryService', () => {
       id: '123',
       url: 'https://www.mobile.de/mock-car',
       source: 'https://www.mobile.de/123',
+      brand: 'BMW',
+      city: 'Berlin',
       price_rating_object: {
         rating: 'VERY_GOOD_PRICE',
         rating_reason: 'Very good price',
@@ -94,6 +104,12 @@ describe('RatingFactoryService', () => {
       id: '123',
       url: 'https://www.mobile.de/mock-car',
       source: 'kleinanzeigen.ebay.de/123',
+      brand: 'BMW',
+      city: 'Berlin',
+      price_rating_object: {
+        rating: null,
+        rating_reason: null,
+      },
     };
     const result = await ratingFactoryService.create(car);
     expect(result).toBeInstanceOf(CarWithoutRating);
@@ -104,6 +120,12 @@ describe('RatingFactoryService', () => {
       id: '123',
       url: 'https://hs-preview.cardeluxe.net/car',
       source: 'https://www.mobile.de/123',
+      brand: 'BMW',
+      city: 'Berlin',
+      price_rating_object: {
+        rating: null,
+        rating_reason: null,
+      },
     };
     // Mock axios.get to return a successful response
     jest.spyOn(ratingFactoryService, 'isCarOnline').mockResolvedValue(true);
@@ -117,6 +139,12 @@ describe('RatingFactoryService', () => {
       id: '123',
       url: 'https://hs-preview.cardeluxe.net/car',
       source: 'https://www.mobile.de/123',
+      brand: 'BMW',
+      city: 'Berlin',
+      price_rating_object: {
+        rating: null,
+        rating_reason: null,
+      },
     };
     // Mock axios.get to return a failed response
     jest.spyOn(ratingFactoryService, 'isCarOnline').mockResolvedValue(false);
@@ -130,6 +158,8 @@ describe('RatingFactoryService', () => {
         id: '123',
         url: 'https://hs-preview.cardeluxe.net/mock-car',
         source: 'https://www.mobile.de/mock-car',
+        brand: 'BMW',
+        city: 'Berlin',
         price_rating_object: {
           rating: 'VERY_GOOD_PRICE',
           rating_reason: 'Very good price',
@@ -145,9 +175,27 @@ describe('RatingFactoryService', () => {
         url: 'https://hs-preview.cardeluxe.net/mock-car',
         source: 'https://www.mobile.de/mock-car',
         price_rating_object: null,
+        brand: 'BMW',
+        city: 'Berlin',
       };
       const result = ratingFactoryService.isRatingExists(car);
       expect(result).toBe(false);
+    });
+  });
+
+  describe('Car without location', () => {
+    it('should return carWithoutCity when car has no city', async () => {
+      const car: CarType = {
+        id: '123',
+        url: 'https://hs-preview.cardeluxe.net/mock-car',
+        source:
+          'https://www.autoscout24.de/angebote/mercedes-benz-a-200-progressive-gasoline-white-ec7c31d7-43df-4818-af4d-5cbf41981b9c',
+        price_rating_object: null,
+        brand: 'BMW',
+        city: null,
+      };
+      const result = await ratingFactoryService.create(car);
+      expect(result).toBeInstanceOf(CarWithoutCity);
     });
   });
 
