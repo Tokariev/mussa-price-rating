@@ -11,6 +11,6 @@ export class CarWithoutCity implements ICar {
 
   // This car is from autoscout24.de and will be available in 65 seconds
   async process(car: CarType): Promise<void> {
-    this.inactiveCarProducerService.processCarInOneMinute(car);
+    this.inactiveCarProducerService.processCarIn20Seconds(car);
   }
 }

@@ -18,11 +18,4 @@ export class InactiveCarsConsumer {
     const parsedData = await this.priceService.parseUrl(source);
     this.priceService.processRating(parsedData);
   }
-
-  @Process('parse-and-emit')
-  async parseAndEmit(job: Job<IInactiveCar>) {
-    const { source } = job.data;
-
-    await this.priceService.parseAndEmit(source);
-  }
 }

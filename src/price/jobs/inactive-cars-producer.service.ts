@@ -23,17 +23,15 @@ export class InactiveCarProducerService {
     console.log(`Job created with id: ${job.id}`);
   }
 
-  async processCarIn65Seconds(car: CarType) {
-    const sixtyFiveSeconds = 65000;
+  async processCarIn20Seconds(car: CarType) {
+    const twentySeconds = 20000;
 
     const job = await this.inactiveCarsQueue.add(
-      'parse-and-emit',
+      '/parse-not-emit',
       {
         source: car.source,
       },
-      { delay: sixtyFiveSeconds, removeOnComplete: true },
+      { delay: twentySeconds, removeOnComplete: true },
     );
-
-    console.log(`Job created with id: ${job.id}`);
   }
 }

@@ -29,7 +29,7 @@ export class PriceService {
     }
   }
 
-  async parseUrl(url: string): Promise<any> {
+  async parseUrl(url: string): Promise<CarType> {
     try {
       const response = await axios.post(
         'http://central-api:3000/api/parser/parse-not-emit',
