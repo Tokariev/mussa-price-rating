@@ -23,8 +23,8 @@ export class InactiveCarProducerService {
     console.log(`Job created with id: ${job.id}`);
   }
 
-  async processCarIn20Seconds(car: CarType) {
-    const twentySeconds = 20000;
+  async processCarIn23Seconds(car: CarType) {
+    const twentySeconds = 23000;
 
     const job = await this.inactiveCarsQueue.add(
       '/parse-not-emit',

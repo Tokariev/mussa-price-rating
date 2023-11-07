@@ -38,6 +38,7 @@ export class RatingFactoryService {
     }
 
     if (this.carHasNoCity(car)) {
+      console.log('Car has no city 🏣, process later');
       return this.carWithoutCity;
     }
 

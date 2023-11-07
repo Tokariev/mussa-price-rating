@@ -11,7 +11,7 @@ export class PriceService {
 
   async processRating(parsedData: CarType): Promise<string> {
     const car = await this.ratingFactoryService.create(parsedData);
-    console.log('Get instanceof from 🏭');
+    console.log(`Get instanceof ${car.constructor.name} from 🏭`);
     car.process(parsedData);
 
     return 'Rating will be processed';
