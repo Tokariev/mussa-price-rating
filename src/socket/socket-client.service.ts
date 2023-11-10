@@ -34,4 +34,9 @@ export class SocketClientService implements OnModuleInit {
   onRatingProcessed(data: any) {
     this.socketClient.emit('onRatingProcessed', data);
   }
+
+  @OnEvent('onFragment')
+  onChunk(data: any) {
+    this.socketClient.emit('onFragment', data);
+  }
 }

@@ -26,18 +26,31 @@ export class CarIsAvailable implements ICar {
         price_rating_object: response.data.price_rating_object,
       };
 
-      console.log(
-        `Emit CarIsAvailable ${priceRating.price_rating_object.rating}`,
-      );
-
       this.eventEmitter.emit('onRatingProcessed', priceRating);
+
+      const rating_reason = response.data.price_rating_object.rating_reason;
+
+      // TODO: Uncomment this after onFragment test
+      // if (this.hasDescriptionDamamage(rating_reason)) {
+      const carAccident = {
+        id: car.id,
+        has_car_accident: true,
+      };
+
+      this.eventEmitter.emit('onFragment', carAccident);
+      // }
     } catch (error) {
       console.log(`*Error while parsing url: ${car.source}`);
-      console.log(error.message);
 
       if (error.response.data.traceback) {
         console.log('Parse not emmit error:', error.response.data.traceback);
       }
+    }
+  }
+
+  hasDescriptionDamamage(ratingReason: string): boolean {
+    if (ratingReason.toLowerCase().includes('unfall')) {
+      return true;
     }
   }
 }
