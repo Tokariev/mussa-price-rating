@@ -1,5 +1,5 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { CarIsAvailable } from './car-is-available';
+import { CarIsAvailable } from '../car-is-available';
 
 describe('CarIsAvailable', () => {
   let carIsAvailable: CarIsAvailable;

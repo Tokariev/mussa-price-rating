@@ -52,5 +52,7 @@ export class CarIsAvailable implements ICar {
     if (ratingReason.toLowerCase().includes('unfall')) {
       return true;
     }
+
+    return false;
   }
 }
