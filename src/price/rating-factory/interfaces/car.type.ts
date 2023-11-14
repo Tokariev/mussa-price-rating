@@ -4,6 +4,7 @@ export type CarType = {
   source: string;
   brand: string;
   city: string;
+  price: number;
   price_rating_object: {
     rating: string;
     rating_reason: string;

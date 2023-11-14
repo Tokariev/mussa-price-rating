@@ -10,8 +10,11 @@ export class VeryGoodPriceCarProducerService {
   ) {}
 
   async chekEvery1HourIsOnline(documentId: string) {
-    const oneHour = 60 * 60 * 1000;
-    const tenSeconds = 20 * 1000;
+    // const oneHour = 60 * 60 * 1000;
+    const tenSeconds = 10 * 1000;
+    const oneHour = tenSeconds;
+
+    console.log(`...Check every 1 hour is online`);
 
     const job = this.veryGoodPriceCarsQueue.add(
       'check-price-was-changed',
@@ -20,9 +23,9 @@ export class VeryGoodPriceCarProducerService {
       },
       {
         jobId: documentId.toString(),
-        delay: tenSeconds,
+        delay: oneHour,
         repeat: {
-          every: tenSeconds,
+          every: oneHour,
         },
         removeOnFail: true,
       },

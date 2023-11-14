@@ -73,6 +73,7 @@ describe('RatingFactoryService', () => {
       source: null,
       brand: 'BMW',
       city: 'Berlin',
+      price: 1000,
       price_rating_object: {
         rating: 'VERY_GOOD_PRICE',
         rating_reason: 'Very good price',
@@ -90,6 +91,7 @@ describe('RatingFactoryService', () => {
       source: 'https://www.mobile.de/123',
       brand: 'BMW',
       city: 'Berlin',
+      price: 1000,
       price_rating_object: {
         rating: 'VERY_GOOD_PRICE',
         rating_reason: 'Very good price',
@@ -106,6 +108,7 @@ describe('RatingFactoryService', () => {
       source: 'kleinanzeigen.ebay.de/123',
       brand: 'BMW',
       city: 'Berlin',
+      price: 1000,
       price_rating_object: {
         rating: null,
         rating_reason: null,
@@ -122,6 +125,7 @@ describe('RatingFactoryService', () => {
       source: 'https://www.mobile.de/123',
       brand: 'BMW',
       city: 'Berlin',
+      price: 1000,
       price_rating_object: {
         rating: null,
         rating_reason: null,
@@ -141,6 +145,7 @@ describe('RatingFactoryService', () => {
       source: 'https://www.mobile.de/123',
       brand: 'BMW',
       city: 'Berlin',
+      price: 1000,
       price_rating_object: {
         rating: null,
         rating_reason: null,
@@ -160,6 +165,7 @@ describe('RatingFactoryService', () => {
         source: 'https://www.mobile.de/mock-car',
         brand: 'BMW',
         city: 'Berlin',
+        price: 1000,
         price_rating_object: {
           rating: 'VERY_GOOD_PRICE',
           rating_reason: 'Very good price',
@@ -176,6 +182,7 @@ describe('RatingFactoryService', () => {
         source: 'https://www.mobile.de/mock-car',
         price_rating_object: null,
         brand: 'BMW',
+        price: 1000,
         city: 'Berlin',
       };
       const result = ratingFactoryService.isRatingExists(car);
@@ -193,6 +200,7 @@ describe('RatingFactoryService', () => {
         price_rating_object: null,
         brand: 'BMW',
         city: null,
+        price: 1000,
       };
       const result = await ratingFactoryService.create(car);
       expect(result).toBeInstanceOf(CarWithoutCity);

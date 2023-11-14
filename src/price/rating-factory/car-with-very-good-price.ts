@@ -13,6 +13,6 @@ export class CarWitVeryGoodPrice implements ICar {
       price_rating_object: car.price_rating_object,
     };
 
-    this.eventEmitter.emit('onRatingProcessed', priceRating);
+    this.eventEmitter.emit('price_rating.processed', priceRating);
   }
 }

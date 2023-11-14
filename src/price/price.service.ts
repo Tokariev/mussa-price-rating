@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { RatingFactoryService } from '../price/rating-factory/rating-factory.service';
 import { CarType } from './rating-factory/interfaces/car.type';
 
-const CENTRAL_API_URL = 'http://central-api:3000';
-
+const LOGGER = 'http://logger:3005';
 @Injectable()
 export class PriceService {
   constructor(private readonly ratingFactoryService: RatingFactoryService) {}
@@ -17,11 +16,9 @@ export class PriceService {
     return 'Rating will be processed';
   }
 
-  async findCarById(documentId: string): Promise<any> {
+  async findCarByDocumentId(documentId: string): Promise<any> {
     try {
-      const resp = await axios.get(
-        `${CENTRAL_API_URL}/api/cars/very-good-price/${documentId}`,
-      );
+      const resp = await axios.get(`${LOGGER}/car/${documentId}`);
 
       return resp.data;
     } catch (error) {

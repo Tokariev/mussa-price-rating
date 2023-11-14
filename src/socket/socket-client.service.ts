@@ -25,18 +25,34 @@ export class SocketClientService implements OnModuleInit {
     });
 
     this.socketClient.on('onCarReceived', (data) => {
+      console.log(`Get car from central-api and process it 🏃🏻`);
       this.priceService.processRating(data);
     });
   }
 
   // Response to central-api
-  @OnEvent('onRatingProcessed')
+  @OnEvent('price_rating.processed')
   onRatingProcessed(data: any) {
-    this.socketClient.emit('onRatingProcessed', data);
+    this.socketClient.emit('price_rating.processed', data);
   }
 
-  @OnEvent('onFragment')
+  @OnEvent('very_good_price.found')
+  onVeryGoodPrice(data: any) {
+    this.socketClient.emit('very_good_price.found', data);
+  }
+
+  @OnEvent('very_good_price.deleted')
+  onVeryGoodPriceDeleted(data: any) {
+    this.socketClient.emit('very_good_price.deleted', data);
+  }
+
+  @OnEvent('very_good_price.updated')
+  onVeryGoodPriceUpdated(data: any) {
+    this.socketClient.emit('very_good_price.updated', data);
+  }
+
+  @OnEvent('fragment.new')
   onChunk(data: any) {
-    this.socketClient.emit('onFragment', data);
+    this.socketClient.emit('fragment.new', data);
   }
 }

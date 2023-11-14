@@ -1,10 +1,19 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { Job, JobInformation, Queue } from 'bull';
 import { PriceService } from '../../price/price.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Inject } from '@nestjs/common';
+import { CarType } from '../rating-factory/interfaces/car.type';
+import axios from 'axios';
 
 interface IVeryGoodPriceCar {
   documentId: string;
 }
+
+type NewPrice = {
+  documentId: string;
+  newPrice: number;
+};
 
 @Processor('very-good-price-cars')
 export class VeryGoodPriceCarsConsumer {
@@ -12,19 +21,21 @@ export class VeryGoodPriceCarsConsumer {
     private readonly priceService: PriceService,
     @InjectQueue('very-good-price-cars')
     private readonly queue: Queue,
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @Process('check-price-was-changed')
   async checkPriceWasChanged(job: Job<IVeryGoodPriceCar>) {
     let isOnline = true;
-    let parsedData: any = null;
+    let parsedData: CarType = null;
 
     const { documentId } = job.data;
 
     const jobs = await this.queue.getRepeatableJobs();
     const foundJob = jobs.find((job) => job.id === documentId);
 
-    const car = await this.priceService.findCarById(documentId);
+    const car = await this.priceService.findCarByDocumentId(documentId);
     if (!car) {
       await this.removeJobFromQueue(foundJob);
       return;
@@ -39,13 +50,15 @@ export class VeryGoodPriceCarsConsumer {
     }
 
     if (!isOnline) {
+      console.log(`...Car ${car.brand} is offline`);
       // Emit : car is offline )))
+      this.eventEmitter.emit('very_good_price.deleted', car);
       // Delete car from mongo db
       await this.removeJobFromQueue(foundJob);
       return;
     }
 
-    if (parsedData.price_rating !== 'VERY_GOOD_PRICE') {
+    if (parsedData.price_rating_object.rating !== 'VERY_GOOD_PRICE') {
       // Emit : price rating was changed )))
       await this.removeJobFromQueue(foundJob);
       return;
@@ -56,6 +69,14 @@ export class VeryGoodPriceCarsConsumer {
 
     if (previousPrice !== currentPrice) {
       // Emit : price was changed )))
+      this.eventEmitter.emit('very_good_price.updated', car);
+
+      const newPrice: NewPrice = {
+        documentId,
+        newPrice: currentPrice,
+      };
+
+      await this.updatePrice(newPrice);
     }
   }
   async removeJobFromQueue(foundJob: JobInformation) {
@@ -65,5 +86,17 @@ export class VeryGoodPriceCarsConsumer {
     await this.queue.removeRepeatableByKey(foundJob.key);
 
     console.log(`Repeated job with ID ${foundJob.key} removed.`);
+  }
+
+  async updatePrice(newPrice: NewPrice) {
+    // Send post request to logger:3005/car/update-price
+    // with new price
+    try {
+      axios.post('http://logger:3005/car/update-price', {
+        ...newPrice,
+      });
+    } catch (error) {
+      console.log(`Error while updating price`);
+    }
   }
 }
