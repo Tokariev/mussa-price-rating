@@ -56,6 +56,10 @@ export class RatingFactoryService {
       return this.autoscout;
     }
 
+    if (this.carHasNoCity(car)) {
+      return this.autoscout;
+    }
+
     const isCarOnline = await this.isCarOnline(car);
 
     if (isCarOnline) {
