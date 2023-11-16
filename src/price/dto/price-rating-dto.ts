@@ -1,6 +1,6 @@
 export class PriceRatingDto {
   id: string;
-  price_rating_object: {
+  price_rating: {
     rating: string;
     rating_reason: string;
   };

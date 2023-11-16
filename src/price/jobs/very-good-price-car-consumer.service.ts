@@ -5,6 +5,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject } from '@nestjs/common';
 import { CarType } from '../rating-factory/interfaces/car.type';
 import axios from 'axios';
+import { EVENTS } from '../events/events.constants';
+import { EventPayload } from '../events/event';
 
 interface IVeryGoodPriceCar {
   documentId: string;
@@ -27,6 +29,8 @@ export class VeryGoodPriceCarsConsumer {
 
   @Process('check-price-was-changed')
   async checkPriceWasChanged(job: Job<IVeryGoodPriceCar>) {
+    console.log(`...VeryGoodPriceCarsConsumer check price after 1 hour`);
+
     let isOnline = true;
     let parsedData: CarType = null;
 
@@ -50,15 +54,12 @@ export class VeryGoodPriceCarsConsumer {
     }
 
     if (!isOnline) {
-      console.log(`...Car ${car.brand} is offline`);
-      // Emit : car is offline )))
-      this.eventEmitter.emit('very_good_price.deleted', car);
       // Delete car from mongo db
       await this.removeJobFromQueue(foundJob);
       return;
     }
 
-    if (parsedData.price_rating_object.rating !== 'VERY_GOOD_PRICE') {
+    if (parsedData.price_rating.rating !== 'VERY_GOOD_PRICE') {
       // Emit : price rating was changed )))
       await this.removeJobFromQueue(foundJob);
       return;
@@ -68,8 +69,10 @@ export class VeryGoodPriceCarsConsumer {
     const currentPrice = parsedData.price;
 
     if (previousPrice !== currentPrice) {
-      // Emit : price was changed )))
-      this.eventEmitter.emit('very_good_price.updated', car);
+      this.eventEmitter.emit(
+        'carWithVeryGoodPrice',
+        new EventPayload(EVENTS.CAR_WITH_VERY_GOOD_PRICE.UPDATED, car),
+      );
 
       const newPrice: NewPrice = {
         documentId,
@@ -89,14 +92,12 @@ export class VeryGoodPriceCarsConsumer {
   }
 
   async updatePrice(newPrice: NewPrice) {
-    // Send post request to logger:3005/car/update-price
-    // with new price
-    try {
-      axios.post('http://logger:3005/car/update-price', {
-        ...newPrice,
-      });
-    } catch (error) {
-      console.log(`Error while updating price`);
-    }
+    // try {
+    //   axios.post('http://logger:3005/car/update-price', {
+    //     ...newPrice,
+    //   });
+    // } catch (error) {
+    //   console.log(`Error while updating price`);
+    // }
   }
 }

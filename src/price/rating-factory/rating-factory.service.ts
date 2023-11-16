@@ -2,9 +2,9 @@ import axios from 'axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ICar } from './interfaces/car.interface';
 import { CarWithoutRating } from './car-without-rating';
-import { CarWithoutCity } from './car-without-city';
+import { Autoscout24 as Autoscout24 } from './autoscout';
 import { CarIsNotAvailableNow } from './car-is-not-available-now';
-import { CarHasRating } from './car-has-rating-already';
+import { CarWithRating as CarWithRating } from './car-with-rating';
 import { CarIsAvailable } from './car-is-available';
 import { NullCar } from './null-car-object';
 import { CarType } from './interfaces/car.type';
@@ -14,12 +14,12 @@ export class RatingFactoryService {
   constructor(
     @Inject(CarWithoutRating)
     private readonly carWithoutRating: CarWithoutRating,
-    @Inject(CarWithoutCity)
-    private readonly carWithoutCity: CarWithoutCity,
+    @Inject(Autoscout24)
+    private readonly autoscout: Autoscout24,
     @Inject(CarIsNotAvailableNow)
     private readonly carIsNotAvailableNow: CarIsNotAvailableNow,
-    @Inject(CarHasRating)
-    private readonly carHasRating: CarHasRating,
+    @Inject(CarWithRating)
+    private readonly carWithRating: CarWithRating,
     @Inject(CarIsAvailable)
     private readonly carIsAvailable: CarIsAvailable,
     @Inject(NullCar)
@@ -27,7 +27,7 @@ export class RatingFactoryService {
   ) {}
 
   async create(car: CarType): Promise<ICar> {
-    const substrings = ['mobile.de', 'autoscout24'];
+    const siteWitRatings = ['mobile.de', 'autoscout24'];
 
     if (!car) {
       return this.nullCar;
@@ -37,22 +37,28 @@ export class RatingFactoryService {
       throw new Error('Car has no source');
     }
 
-    if (this.carHasNoCity(car)) {
-      console.log('Car has no city 🏣, process later');
-      return this.carWithoutCity;
+    // kleinanzeigen.de
+    if (car.source.includes('kleinanzeigen')) {
+      return this.carWithoutRating;
     }
 
     if (this.isRatingExists(car)) {
-      return this.carHasRating;
+      return this.carWithRating;
     }
-
-    if (!substrings.some((substr) => car.source.includes(substr))) {
-      return this.carWithoutRating;
+    // ###
+    // hs-preview.cardeluxe.net indicate that the car is fresh
+    // after car was parsed, url get the same value as source
+    // ###
+    if (
+      car.url.includes('hs-preview.cardeluxe.net') &&
+      car.source.includes('autoscout24.de')
+    ) {
+      return this.autoscout;
     }
 
     const isCarOnline = await this.isCarOnline(car);
 
-    if (car.url.includes('hs-preview.cardeluxe.net') && isCarOnline) {
+    if (isCarOnline) {
       return this.carIsAvailable;
     }
 
@@ -103,16 +109,14 @@ export class RatingFactoryService {
     // If response is 200 then the ad is online, if 404 then the ad is offline
     try {
       await axios(config);
-      console.log('V - online');
       return true;
     } catch (error) {
-      console.log('X - offline');
       return false;
     }
   }
 
   isRatingExists(car: CarType): boolean {
-    if (car?.price_rating_object?.rating) {
+    if (car?.price_rating?.rating) {
       return true;
     }
 

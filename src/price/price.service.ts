@@ -35,7 +35,7 @@ export class PriceService {
         },
       );
 
-      console.log(`...Parsed ✅`);
+      console.log(`...Ratin service get parsed data ✅`);
 
       return response.data;
     } catch (error) {

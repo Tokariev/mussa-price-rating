@@ -8,10 +8,10 @@ import { VeryGoodPriceCarProducerService } from './jobs/very-good-price-car-prod
 import { RatingFactoryService } from './rating-factory/rating-factory.service';
 import { VeryGoodPriceCarsConsumer } from './jobs/very-good-price-car-consumer.service';
 import { InactiveCarsConsumer } from './jobs/inactive-cars-consumer.service';
-import { CarHasRating } from './rating-factory/car-has-rating-already';
+import { CarWithRating } from './rating-factory/car-with-rating';
 import { CarIsAvailable } from './rating-factory/car-is-available';
 import { NullCar } from './rating-factory/null-car-object';
-import { CarWithoutCity } from './rating-factory/car-without-city';
+import { Autoscout24 } from './rating-factory/autoscout';
 
 @Module({
   imports: [
@@ -30,11 +30,11 @@ import { CarWithoutCity } from './rating-factory/car-without-city';
   ],
   providers: [
     PriceService,
-    CarHasRating,
+    CarWithRating,
     CarIsAvailable,
     RatingFactoryService,
     CarWithoutRating,
-    CarWithoutCity,
+    Autoscout24,
     CarIsNotAvailableNow,
 
     InactiveCarProducerService,

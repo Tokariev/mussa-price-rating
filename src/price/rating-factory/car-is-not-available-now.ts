@@ -9,6 +9,6 @@ export class CarIsNotAvailableNow implements ICar {
   ) {}
 
   async process(car: CarType): Promise<void> {
-    this.inactiveCarProducerService.processCarInOneMinute(car);
+    this.inactiveCarProducerService.processCarLater(car, 60);
   }
 }

@@ -10,9 +10,7 @@ export class VeryGoodPriceCarProducerService {
   ) {}
 
   async chekEvery1HourIsOnline(documentId: string) {
-    // const oneHour = 60 * 60 * 1000;
-    const tenSeconds = 10 * 1000;
-    const oneHour = tenSeconds;
+    const oneHour = 1000 * 60 * 60;
 
     console.log(`...Check every 1 hour is online`);
 

@@ -1,9 +1,12 @@
 // Create websocket client in rating/src/websocket/websocket.client.ts
 
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Socket, io } from 'socket.io-client';
 import { PriceService } from '../price/price.service';
+import { EventPayload } from 'src/price/events/event';
+import { EVENTS } from 'src/price/events/events.constants';
+import { PublicationService } from 'src/publication/publication.service';
 
 const socketUrl = io('http://central-api:3000');
 
@@ -11,7 +14,10 @@ const socketUrl = io('http://central-api:3000');
 export class SocketClientService implements OnModuleInit {
   public socketClient: Socket;
 
-  constructor(private readonly priceService: PriceService) {
+  constructor(
+    private readonly priceService: PriceService,
+    private readonly publicationService: PublicationService,
+  ) {
     this.socketClient = socketUrl;
   }
 
@@ -24,35 +30,39 @@ export class SocketClientService implements OnModuleInit {
       console.log(`Connected to central-api server`);
     });
 
-    this.socketClient.on('onCarReceived', (data) => {
-      console.log(`Get car from central-api and process it 🏃🏻`);
-      this.priceService.processRating(data);
+    this.socketClient.on('car', (car) => {
+      console.log(`Post ptocessing ${car.data.brand} 🚙 `);
+      this.priceService.processRating(car.data);
+      this.publicationService.processPublication(car.data);
     });
   }
 
-  // Response to central-api
-  @OnEvent('price_rating.processed')
-  onRatingProcessed(data: any) {
-    this.socketClient.emit('price_rating.processed', data);
-  }
+  // Display event name and data in console
+  @OnEvent('**')
+  handleEverything(payload: EventPayload) {
+    const { type } = payload as EventPayload;
 
-  @OnEvent('very_good_price.found')
-  onVeryGoodPrice(data: any) {
-    this.socketClient.emit('very_good_price.found', data);
-  }
-
-  @OnEvent('very_good_price.deleted')
-  onVeryGoodPriceDeleted(data: any) {
-    this.socketClient.emit('very_good_price.deleted', data);
-  }
-
-  @OnEvent('very_good_price.updated')
-  onVeryGoodPriceUpdated(data: any) {
-    this.socketClient.emit('very_good_price.updated', data);
-  }
-
-  @OnEvent('fragment.new')
-  onChunk(data: any) {
-    this.socketClient.emit('fragment.new', data);
+    switch (type) {
+      case EVENTS.CAR_WITH_VERY_GOOD_PRICE.FOUND:
+        this.socketClient.emit('carWithVeryGoodPrice', payload);
+        break;
+      case EVENTS.CAR_WITH_VERY_GOOD_PRICE.UPDATED:
+        this.socketClient.emit('carWithVeryGoodPrice', payload);
+        break;
+      case EVENTS.CAR_WITH_VERY_GOOD_PRICE.DELETED:
+        this.socketClient.emit('carWithVeryGoodPrice', payload);
+        break;
+      case EVENTS.PRICE_RATING.PROCESSED:
+        this.socketClient.emit('fragment', payload);
+        break;
+      case EVENTS.FRAGMENT.CAR_IS_DAMAGED:
+        this.socketClient.emit('fragment', payload);
+        break;
+      case EVENTS.FRAGMENT.PUBLICATION_IS_NEW:
+        this.socketClient.emit('fragment', payload);
+        break;
+      default:
+        break;
+    }
   }
 }

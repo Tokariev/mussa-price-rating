@@ -6,7 +6,7 @@ import { VeryGoodPriceCarsConsumer } from '../../jobs/very-good-price-car-consum
 import { VeryGoodPriceCarProducerService } from '../../jobs/very-good-price-car-producer.service';
 import { PriceService } from '../../price.service';
 import { CarWithoutRating } from '../car-without-rating';
-import { CarHasRating } from '../car-has-rating-already';
+import { CarWithRating } from '../car-with-rating';
 import { CarIsAvailable } from '../car-is-available';
 import { CarIsNotAvailableNow } from '../car-is-not-available-now';
 import { NullCar } from '../null-car-object';
@@ -14,7 +14,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BullModule } from '@nestjs/bull';
 import axios from 'axios';
 import { CarType } from '../interfaces/car.type';
-import { CarWithoutCity } from '../car-without-city';
+import { Autoscout24 } from '../autoscout';
 
 describe('RatingFactoryService', () => {
   let ratingFactoryService: RatingFactoryService;
@@ -39,11 +39,11 @@ describe('RatingFactoryService', () => {
       ],
       providers: [
         PriceService,
-        CarHasRating,
+        CarWithRating,
         CarIsAvailable,
         RatingFactoryService,
         CarWithoutRating,
-        CarWithoutCity,
+        Autoscout24,
         CarIsNotAvailableNow,
 
         InactiveCarProducerService,
@@ -68,13 +68,13 @@ describe('RatingFactoryService', () => {
 
   it('should return carWithoutRating, because the car has no source', async () => {
     const car: CarType = {
-      id: '123',
+      id: 123,
       url: 'https://www.mobile.de/mock-car',
       source: null,
       brand: 'BMW',
       city: 'Berlin',
       price: 1000,
-      price_rating_object: {
+      price_rating: {
         rating: 'VERY_GOOD_PRICE',
         rating_reason: 'Very good price',
       },
@@ -86,30 +86,30 @@ describe('RatingFactoryService', () => {
 
   it('should return carHasRating when car has price rating', async () => {
     const car: CarType = {
-      id: '123',
+      id: 123,
       url: 'https://www.mobile.de/mock-car',
       source: 'https://www.mobile.de/123',
       brand: 'BMW',
       city: 'Berlin',
       price: 1000,
-      price_rating_object: {
+      price_rating: {
         rating: 'VERY_GOOD_PRICE',
         rating_reason: 'Very good price',
       },
     };
     const result = await ratingFactoryService.create(car);
-    expect(result).toBeInstanceOf(CarHasRating);
+    expect(result).toBeInstanceOf(CarWithRating);
   });
 
   it('should return carWithoutRating when car source does not contain substrings', async () => {
     const car: CarType = {
-      id: '123',
+      id: 123,
       url: 'https://www.mobile.de/mock-car',
       source: 'kleinanzeigen.ebay.de/123',
       brand: 'BMW',
       city: 'Berlin',
       price: 1000,
-      price_rating_object: {
+      price_rating: {
         rating: null,
         rating_reason: null,
       },
@@ -120,13 +120,13 @@ describe('RatingFactoryService', () => {
 
   it('should return carIsAvailable when car URL contains "hs-preview.cardeluxe.net" and is online', async () => {
     const car: CarType = {
-      id: '123',
+      id: 123,
       url: 'https://hs-preview.cardeluxe.net/car',
       source: 'https://www.mobile.de/123',
       brand: 'BMW',
       city: 'Berlin',
       price: 1000,
-      price_rating_object: {
+      price_rating: {
         rating: null,
         rating_reason: null,
       },
@@ -140,13 +140,13 @@ describe('RatingFactoryService', () => {
 
   it('should return carIsNotAvailableNow when car URL contains "hs-preview.cardeluxe.net" and is offline', async () => {
     const car: CarType = {
-      id: '123',
+      id: 123,
       url: 'https://hs-preview.cardeluxe.net/car',
       source: 'https://www.mobile.de/123',
       brand: 'BMW',
       city: 'Berlin',
       price: 1000,
-      price_rating_object: {
+      price_rating: {
         rating: null,
         rating_reason: null,
       },
@@ -160,13 +160,13 @@ describe('RatingFactoryService', () => {
   describe('isRatingExists', () => {
     it('should return true when car has a price rating', () => {
       const car: CarType = {
-        id: '123',
+        id: 123,
         url: 'https://hs-preview.cardeluxe.net/mock-car',
         source: 'https://www.mobile.de/mock-car',
         brand: 'BMW',
         city: 'Berlin',
         price: 1000,
-        price_rating_object: {
+        price_rating: {
           rating: 'VERY_GOOD_PRICE',
           rating_reason: 'Very good price',
         },
@@ -177,10 +177,10 @@ describe('RatingFactoryService', () => {
 
     it('should return false when car has no price rating', () => {
       const car: CarType = {
-        id: '123',
+        id: 123,
         url: 'https://hs-preview.cardeluxe.net/mock-car',
         source: 'https://www.mobile.de/mock-car',
-        price_rating_object: null,
+        price_rating: null,
         brand: 'BMW',
         price: 1000,
         city: 'Berlin',
@@ -193,17 +193,17 @@ describe('RatingFactoryService', () => {
   describe('Car without location', () => {
     it('should return carWithoutCity when car has no city', async () => {
       const car: CarType = {
-        id: '123',
+        id: 123,
         url: 'https://hs-preview.cardeluxe.net/mock-car',
         source:
           'https://www.autoscout24.de/angebote/mercedes-benz-a-200-progressive-gasoline-white-ec7c31d7-43df-4818-af4d-5cbf41981b9c',
-        price_rating_object: null,
+        price_rating: null,
         brand: 'BMW',
         city: null,
         price: 1000,
       };
       const result = await ratingFactoryService.create(car);
-      expect(result).toBeInstanceOf(CarWithoutCity);
+      expect(result).toBeInstanceOf(Autoscout24);
     });
   });
 

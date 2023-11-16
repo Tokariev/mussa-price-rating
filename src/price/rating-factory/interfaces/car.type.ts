@@ -1,12 +1,14 @@
+export type PriceRating = {
+  rating: string;
+  rating_reason: string;
+};
+
 export type CarType = {
-  id: string;
+  id: number;
   url: string;
   source: string;
   brand: string;
   city: string;
   price: number;
-  price_rating_object: {
-    rating: string;
-    rating_reason: string;
-  };
+  price_rating: PriceRating;
 };

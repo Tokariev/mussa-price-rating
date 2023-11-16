@@ -9,29 +9,17 @@ export class InactiveCarProducerService {
     private readonly inactiveCarsQueue: Queue,
   ) {}
 
-  async processCarInOneMinute(car: CarType) {
-    const fiftySeconds = 50000;
+  async processCarLater(car: CarType, delayInSeconds: number) {
+    const delay = delayInSeconds * 1000;
 
     const job = await this.inactiveCarsQueue.add(
       '/parse-not-emit',
       {
         source: car.source,
       },
-      { delay: fiftySeconds, removeOnComplete: true }, // 3 seconds delayed
+      { delay: delay, removeOnComplete: true },
     );
 
     console.log(`Job created with id: ${job.id}`);
-  }
-
-  async processCarIn23Seconds(car: CarType) {
-    const twentySeconds = 23000;
-
-    const job = await this.inactiveCarsQueue.add(
-      '/parse-not-emit',
-      {
-        source: car.source,
-      },
-      { delay: twentySeconds, removeOnComplete: true },
-    );
   }
 }
