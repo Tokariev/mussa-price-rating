@@ -5,7 +5,7 @@ export const EVENTS = {
     DELETED: 'car_with_very_good_price.deleted',
   },
   FRAGMENT: {
-    CAR_IS_DAMAGED: 'car_is_damaged',
+    CAR_ACCIDENT: 'car_accident',
     PUBLICATION_IS_NEW: 'publication_is_new',
   },
   PRICE_RATING: {

@@ -11,4 +11,5 @@ export type CarType = {
   city: string;
   price: number;
   price_rating: PriceRating;
+  has_car_accident: boolean;
 };

@@ -32,16 +32,8 @@ export class PublicationService {
   }
 
   isPublicationNew = async (data: CarType): Promise<boolean> => {
-    if (await this.isSamePublicationInDatabase(data)) {
-      return false;
-    }
-
-    if (await this.hasPublicationPriceHistory(data)) {
-      return false;
-    }
-
-    if (!(await this.isPublicationOnline(data))) {
-      return false;
+    if (data.source.includes('mobile.de')) {
+      return await this.isPublicationOnline(data);
     }
 
     return true;
@@ -80,10 +72,6 @@ export class PublicationService {
   };
 
   isPublicationOnline = async (data: CarType): Promise<boolean> => {
-    if (!data.source.includes('mobile.de')) {
-      return true;
-    }
-
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -108,9 +96,10 @@ export class PublicationService {
 
     try {
       await axios(config);
+      // Exception will be thrown if publication is offline
       return false;
     } catch (error) {
-      return error.response.status === 404;
+      return true;
     }
   };
 }

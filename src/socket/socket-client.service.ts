@@ -4,9 +4,10 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Socket, io } from 'socket.io-client';
 import { PriceService } from '../price/price.service';
-import { EventPayload } from 'src/price/events/event';
-import { EVENTS } from 'src/price/events/events.constants';
-import { PublicationService } from 'src/publication/publication.service';
+import { EventPayload } from '../price/events/event';
+import { EVENTS } from '../price/events/events.constants';
+import { PublicationService } from '../publication/publication.service';
+import { CarAccidentService } from '../car-accident/car-accident.service';
 
 const socketUrl = io('http://central-api:3000');
 
@@ -17,6 +18,7 @@ export class SocketClientService implements OnModuleInit {
   constructor(
     private readonly priceService: PriceService,
     private readonly publicationService: PublicationService,
+    private readonly carAccidentService: CarAccidentService,
   ) {
     this.socketClient = socketUrl;
   }
@@ -34,6 +36,7 @@ export class SocketClientService implements OnModuleInit {
       console.log(`Post ptocessing ${car.data.brand} 🚙 `);
       this.priceService.processRating(car.data);
       this.publicationService.processPublication(car.data);
+      this.carAccidentService.processCarAccident(car.data);
     });
   }
 
@@ -55,10 +58,13 @@ export class SocketClientService implements OnModuleInit {
       case EVENTS.PRICE_RATING.PROCESSED:
         this.socketClient.emit('fragment', payload);
         break;
-      case EVENTS.FRAGMENT.CAR_IS_DAMAGED:
+      case EVENTS.FRAGMENT.CAR_ACCIDENT:
         this.socketClient.emit('fragment', payload);
         break;
       case EVENTS.FRAGMENT.PUBLICATION_IS_NEW:
+        this.socketClient.emit('fragment', payload);
+        break;
+      case EVENTS.FRAGMENT.CAR_ACCIDENT:
         this.socketClient.emit('fragment', payload);
         break;
       default:
