@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CarType } from '../price/rating-factory/interfaces/car.type';
+import { CarType } from '../rating/types/car.type';
 import axios from 'axios';
 
 @Injectable()
 export class ParserService {
   async parseUrl(url: string): Promise<CarType> {
     try {
+      console.debug(`Start to parse: ${url}`);
+
       const response = await axios.post(
         'http://central-api:3000/api/parser/parse-not-emit',
         {
@@ -13,7 +15,7 @@ export class ParserService {
         },
       );
 
-      console.log(`...Ratin service get parsed data ✅`);
+      console.debug(`.Finish. Rating: ${response.data.price_rating}}`);
 
       return response.data;
     } catch (error) {

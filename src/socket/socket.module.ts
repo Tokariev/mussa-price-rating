@@ -1,11 +1,17 @@
 import { Module } from '@nestjs/common';
 import { SocketClientService } from './socket-client.service';
-import { PriceModule } from 'src/price/price.module';
+import { RatingModule } from 'src/rating/rating.module';
 import { PublicationModule } from 'src/publication/publication.module';
 import { CarAccidentModule } from 'src/car-accident/car-accident.module';
+import { CarManagerModule } from 'src/car-manager/car-manager.module';
 
 @Module({
-  imports: [PriceModule, PublicationModule, CarAccidentModule],
+  imports: [
+    RatingModule,
+    PublicationModule,
+    CarAccidentModule,
+    CarManagerModule,
+  ],
   providers: [SocketClientService],
 })
 export class SocketModule {}

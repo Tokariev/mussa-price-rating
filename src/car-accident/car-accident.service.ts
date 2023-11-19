@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CarType } from '../price/rating-factory/interfaces/car.type';
+import { CarType } from '../rating/types/car.type';
 import { PublicationService } from 'src/publication/publication.service';
 import { ParserService } from '../parser/parser.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EventPayload } from 'src/price/events/event';
-import { EVENTS } from 'src/price/events/events.constants';
+import { EventPayload } from 'src/events/event';
+import { EVENTS } from 'src/events/events.constants';
 
 @Injectable()
 export class CarAccidentService {

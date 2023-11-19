@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import axios from 'axios';
-import { EventPayload } from '../price/events/event';
-import { EVENTS } from '../price/events/events.constants';
-import { CarType } from '../price/rating-factory/interfaces/car.type';
+import { EventPayload } from '../events/event';
+import { EVENTS } from '../events/events.constants';
+import { CarType } from '../rating/types/car.type';
 
 const loggerApi = axios.create({
   baseURL: 'http://logger:3005',
@@ -34,6 +34,13 @@ export class PublicationService {
   isPublicationNew = async (data: CarType): Promise<boolean> => {
     if (data.source.includes('mobile.de')) {
       return await this.isPublicationOnline(data);
+    }
+
+    if (
+      data.source.includes('autoscout24.de') &&
+      data.price_history.length > 1
+    ) {
+      return false;
     }
 
     return true;

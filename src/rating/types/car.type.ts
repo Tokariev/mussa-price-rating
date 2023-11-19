@@ -10,6 +10,7 @@ export type CarType = {
   brand: string;
   city: string;
   price: number;
+  price_history: object[];
   price_rating: PriceRating;
   has_car_accident: boolean;
 };

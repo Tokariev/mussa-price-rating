@@ -3,11 +3,12 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Socket, io } from 'socket.io-client';
-import { PriceService } from '../price/price.service';
-import { EventPayload } from '../price/events/event';
-import { EVENTS } from '../price/events/events.constants';
+import { RatingService } from '../rating/rating.service';
+import { EventPayload } from '../events/event';
+import { EVENTS } from '../events/events.constants';
 import { PublicationService } from '../publication/publication.service';
 import { CarAccidentService } from '../car-accident/car-accident.service';
+import { CarManagerService } from 'src/car-manager/car-manager.service';
 
 const socketUrl = io('http://central-api:3000');
 
@@ -16,9 +17,10 @@ export class SocketClientService implements OnModuleInit {
   public socketClient: Socket;
 
   constructor(
-    private readonly priceService: PriceService,
+    private readonly ratingService: RatingService,
     private readonly publicationService: PublicationService,
     private readonly carAccidentService: CarAccidentService,
+    private readonly carManagerService: CarManagerService,
   ) {
     this.socketClient = socketUrl;
   }
@@ -33,10 +35,9 @@ export class SocketClientService implements OnModuleInit {
     });
 
     this.socketClient.on('car', (car) => {
-      console.log(`Post ptocessing ${car.data.brand} 🚙 `);
-      this.priceService.processRating(car.data);
       this.publicationService.processPublication(car.data);
-      this.carAccidentService.processCarAccident(car.data);
+
+      this.carManagerService.processCar(car.data);
     });
   }
 

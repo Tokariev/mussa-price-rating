@@ -1,7 +1,7 @@
 import { InjectQueue, Process } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
-import { CarType } from '../rating-factory/interfaces/car.type';
+import { CarType } from '../rating/types/car.type';
 @Injectable()
 export class InactiveCarProducerService {
   constructor(
@@ -13,7 +13,7 @@ export class InactiveCarProducerService {
     const delay = delayInSeconds * 1000;
 
     const job = await this.inactiveCarsQueue.add(
-      '/parse-not-emit',
+      '/parse',
       {
         source: car.source,
       },
