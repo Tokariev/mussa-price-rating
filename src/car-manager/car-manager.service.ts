@@ -28,29 +28,31 @@ export class CarManagerService {
       const isCarOnline = await this.isCarOnline(car);
 
       if (isCarOnline) {
-        const parsedData = await this.parserService.parseUrl(car.source);
-        this.processCarImmediately(parsedData);
+        this.processCarImmediately(car);
         return;
       }
       //   Parse car and process after 60 seconds
       await this.jobsService.processCarLater(car, 60);
+      return;
     }
 
     if (car.source.includes('autoscout24.de') && this.carHasNoCity(car)) {
       // Process car after 30 seconds
       await this.jobsService.processCarLater(car, 30);
       await this.jobsService.processCarLater(car, 60);
+      return;
     }
 
     if (
       car.source.includes('autoscout24.de') &&
-      car.price_history.length === 0
+      car.price_history.length === 0 &&
+      !this.hasRating(car)
     ) {
       // Process car after 30 seconds
       await this.jobsService.processCarLater(car, 10);
+      return;
     }
 
-    // Process car immediately
     this.processCarImmediately(car);
   }
 
@@ -100,9 +102,10 @@ export class CarManagerService {
     return false;
   }
 
-  processCarImmediately(car: CarType) {
-    this.ratingService.processRating(car);
-    this.carAccidentService.processCarAccident(car);
+  async processCarImmediately(car: CarType) {
+    const parsedData = await this.parserService.parseUrl(car.source);
+    this.ratingService.processRating(parsedData);
+    this.carAccidentService.processCarAccident(parsedData);
   }
 
   hasRating(car: CarType): boolean {

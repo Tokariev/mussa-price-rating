@@ -47,7 +47,7 @@ export class PublicationService {
   };
 
   isSamePublicationInDatabase = async (data: CarType): Promise<boolean> => {
-    const response = await loggerApi.post('/car/find-by-url', {
+    const response = await loggerApi.post('/car/find-all-by-url', {
       source: data.source,
     });
 

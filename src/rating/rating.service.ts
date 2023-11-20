@@ -15,10 +15,6 @@ export class RatingService {
       price_rating: parsedData.price_rating,
     };
 
-    console.log("Emit event 'price_rating_processed' ⭐️");
-    console.log(parsedData.source);
-    console.log(parsedData.price_rating);
-
     this.eventEmitter.emit(
       'fragment',
       new EventPayload(EVENTS.PRICE_RATING.PROCESSED, data),

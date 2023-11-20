@@ -65,9 +65,6 @@ export class SocketClientService implements OnModuleInit {
       case EVENTS.FRAGMENT.PUBLICATION_IS_NEW:
         this.socketClient.emit('fragment', payload);
         break;
-      case EVENTS.FRAGMENT.CAR_ACCIDENT:
-        this.socketClient.emit('fragment', payload);
-        break;
       default:
         break;
     }
