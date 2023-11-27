@@ -5,6 +5,7 @@ import { InactiveCarProducerService } from '../jobs/inactive-cars-producer.servi
 import { CarType } from '../rating/types/car.type';
 import { RatingService } from '../rating/rating.service';
 import { ParserService } from '../parser/parser.service';
+import { PriceHistoryService } from 'src/price-history/price-history.service';
 
 @Injectable()
 export class CarManagerService {
@@ -17,6 +18,8 @@ export class CarManagerService {
     private readonly carAccidentService: CarAccidentService,
     @Inject(ParserService)
     private readonly parserService: ParserService,
+    @Inject(PriceHistoryService)
+    private readonly priceHistoryService: PriceHistoryService,
   ) {}
 
   async processCar(car: CarType) {
@@ -57,8 +60,6 @@ export class CarManagerService {
   }
 
   async isCarOnline(car: CarType): Promise<boolean> {
-    console.log('Is car online?', car.source);
-
     if (!car.source.includes('mobile.de')) {
       return true;
     }
@@ -106,6 +107,7 @@ export class CarManagerService {
     const parsedData = await this.parserService.parseUrl(car.source);
     this.ratingService.processRating(parsedData);
     this.carAccidentService.processCarAccident(parsedData);
+    this.priceHistoryService.processPriceHistory(parsedData);
   }
 
   hasRating(car: CarType): boolean {

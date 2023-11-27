@@ -11,4 +11,8 @@ export const EVENTS = {
   PRICE_RATING: {
     PROCESSED: 'price_rating.processed',
   },
+
+  PRICE_HISTORY: {
+    FOUND: 'price_history.found',
+  },
 };

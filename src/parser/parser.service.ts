@@ -15,8 +15,6 @@ export class ParserService {
         },
       );
 
-      console.debug(`.Finish. Rating: ${response.data.price_rating}}`);
-
       return response.data;
     } catch (error) {
       console.log(`.Error to parse: ${url}`);

@@ -1,6 +1,7 @@
 export type PriceRating = {
   rating: string;
   rating_reason: string;
+  threshold: string[];
 };
 
 export type CarType = {

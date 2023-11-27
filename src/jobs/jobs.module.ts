@@ -6,6 +6,7 @@ import { ParserModule } from 'src/parser/parser.module';
 import { RatingModule } from 'src/rating/rating.module';
 import { CarAccidentModule } from 'src/car-accident/car-accident.module';
 import { BullModule } from '@nestjs/bull';
+import { PriceHistoryModule } from 'src/price-history/price-history.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BullModule } from '@nestjs/bull';
     ParserModule,
     RatingModule,
     CarAccidentModule,
+    PriceHistoryModule,
   ],
   providers: [
     JobsService,

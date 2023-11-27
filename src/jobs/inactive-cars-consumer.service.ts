@@ -1,8 +1,9 @@
 import { Job } from 'bull';
 import { Process, Processor } from '@nestjs/bull';
-import { ParserService } from 'src/parser/parser.service';
-import { RatingService } from 'src/rating/rating.service';
-import { CarAccidentService } from 'src/car-accident/car-accident.service';
+import { ParserService } from '../parser/parser.service';
+import { RatingService } from '../rating/rating.service';
+import { CarAccidentService } from '../car-accident/car-accident.service';
+import { PriceHistoryService } from '../price-history/price-history.service';
 
 interface IInactiveCar {
   id: string;
@@ -15,6 +16,7 @@ export class InactiveCarsConsumerService {
     private readonly parserService: ParserService,
     private readonly ratingService: RatingService,
     private readonly carAccidentService: CarAccidentService,
+    private readonly priceHistoryService: PriceHistoryService,
   ) {}
 
   @Process('/parse')
@@ -28,5 +30,6 @@ export class InactiveCarsConsumerService {
 
     this.ratingService.processRating(parsedData);
     this.carAccidentService.processCarAccident(parsedData);
+    this.priceHistoryService.processPriceHistory(parsedData);
   }
 }

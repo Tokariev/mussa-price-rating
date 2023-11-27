@@ -10,6 +10,7 @@ import { ParserModule } from './parser/parser.module';
 import { CarManagerModule } from './car-manager/car-manager.module';
 import { JobsModule } from './jobs/jobs.module';
 import { BullModule } from '@nestjs/bull';
+import { PriceHistoryModule } from './price-history/price-history.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { BullModule } from '@nestjs/bull';
     ParserModule,
     CarManagerModule,
     JobsModule,
+    PriceHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
