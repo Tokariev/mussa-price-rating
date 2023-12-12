@@ -23,6 +23,11 @@ export class CarManagerService {
   ) {}
 
   async processCar(car: CarType) {
+    if (!car.source) {
+      console.log('🚧', car);
+      return;
+    }
+
     if (car.source.includes('kleinanzeigen')) {
       return;
     }
