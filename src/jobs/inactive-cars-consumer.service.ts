@@ -3,7 +3,9 @@ import { Process, Processor } from '@nestjs/bull';
 import { ParserService } from '../parser/parser.service';
 import { RatingService } from '../rating/rating.service';
 import { CarAccidentService } from '../car-accident/car-accident.service';
-import { PriceHistoryService } from '../price-history/price-history.service';
+import { Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+// import { PriceHistoryService } from '../price-history/price-history.service';
 
 interface IInactiveCar {
   id: string;
@@ -16,7 +18,8 @@ export class InactiveCarsConsumerService {
     private readonly parserService: ParserService,
     private readonly ratingService: RatingService,
     private readonly carAccidentService: CarAccidentService,
-    private readonly priceHistoryService: PriceHistoryService,
+    // private readonly priceHistoryService: PriceHistoryService,
+    @Inject('NATS_SERVICE') private readonly natsClient: ClientProxy,
   ) {}
 
   @Process('/parse')
@@ -30,6 +33,7 @@ export class InactiveCarsConsumerService {
 
     this.ratingService.processRating(parsedData);
     this.carAccidentService.processCarAccident(parsedData);
-    this.priceHistoryService.processPriceHistory(parsedData);
+    // this.priceHistoryService.processPriceHistory(parsedData);
+    this.natsClient.emit('read_price_history', parsedData);
   }
 }

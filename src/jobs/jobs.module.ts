@@ -6,7 +6,7 @@ import { ParserModule } from 'src/parser/parser.module';
 import { RatingModule } from 'src/rating/rating.module';
 import { CarAccidentModule } from 'src/car-accident/car-accident.module';
 import { BullModule } from '@nestjs/bull';
-import { PriceHistoryModule } from 'src/price-history/price-history.module';
+import { NatsClientModule } from 'src/nats-client/nats-client.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { PriceHistoryModule } from 'src/price-history/price-history.module';
     ParserModule,
     RatingModule,
     CarAccidentModule,
-    PriceHistoryModule,
+    NatsClientModule,
   ],
   providers: [
     JobsService,

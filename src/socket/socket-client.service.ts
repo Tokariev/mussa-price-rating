@@ -6,7 +6,7 @@ import { Socket, io } from 'socket.io-client';
 import { EventPayload } from '../events/event';
 import { EVENTS } from '../events/events.constants';
 import { PublicationService } from '../publication/publication.service';
-import { CarManagerService } from 'src/car-manager/car-manager.service';
+import { CarManagerService } from '../car-manager/car-manager.service';
 
 const socketUrl = io('http://central-api:3000');
 
@@ -31,8 +31,8 @@ export class SocketClientService implements OnModuleInit {
     });
 
     this.socketClient.on('car', (car) => {
+      console.log('... ))) car event');
       this.publicationService.processPublication(car.data);
-
       this.carManagerService.processCar(car.data);
     });
   }
@@ -59,9 +59,6 @@ export class SocketClientService implements OnModuleInit {
         this.socketClient.emit('fragment', payload);
         break;
       case EVENTS.FRAGMENT.PUBLICATION_IS_NEW:
-        this.socketClient.emit('fragment', payload);
-        break;
-      case EVENTS.PRICE_HISTORY.FOUND:
         this.socketClient.emit('fragment', payload);
         break;
       default:

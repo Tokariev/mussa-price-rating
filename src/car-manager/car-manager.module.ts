@@ -4,16 +4,9 @@ import { JobsModule } from '../jobs/jobs.module';
 import { RatingModule } from '../rating/rating.module';
 import { CarAccidentModule } from '../car-accident/car-accident.module';
 import { ParserModule } from '../parser/parser.module';
-import { PriceHistoryModule } from '../price-history/price-history.module';
 
 @Module({
-  imports: [
-    JobsModule,
-    RatingModule,
-    CarAccidentModule,
-    ParserModule,
-    PriceHistoryModule,
-  ],
+  imports: [JobsModule, RatingModule, CarAccidentModule, ParserModule],
   providers: [CarManagerService],
   exports: [CarManagerService],
 })
