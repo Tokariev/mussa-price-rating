@@ -26,10 +26,6 @@ export class SocketClientService implements OnModuleInit {
   }
 
   private registerConsumerEvents() {
-    this.socketClient.on('connect', () => {
-      console.log(`Connected to central-api server`);
-    });
-
     this.socketClient.on('car', (car) => {
       console.log('... ))) car event');
       this.publicationService.processPublication(car.data);
