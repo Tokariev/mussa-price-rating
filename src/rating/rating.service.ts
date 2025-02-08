@@ -11,7 +11,7 @@ export class RatingService {
 
   async processRating(parsedData: CarType): Promise<void> {
     const data = {
-      id: parsedData.id,
+      externalCarId: parsedData.externalCarId,
       price_rating: parsedData.price_rating,
     };
 

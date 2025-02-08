@@ -5,9 +5,9 @@ export type PriceRating = {
 };
 
 export type CarType = {
-  id: number;
   url: string;
   source: string;
+  externalCarId: string;
   brand: string;
   city: string;
   price: number;

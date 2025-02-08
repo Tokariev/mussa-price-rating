@@ -12,7 +12,7 @@ export class CarAccidentService {
 
   async processCarAccident(parsedCar: CarType) {
     const accident = {
-      id: parsedCar.id,
+      externalCarId: parsedCar.externalCarId,
       has_car_accident: parsedCar.has_car_accident,
     };
 

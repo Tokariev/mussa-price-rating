@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import axios from 'axios';
-import { EventPayload } from '../events/event';
+import { EventData, EventPayload } from '../events/event';
 import { EVENTS } from '../events/events.constants';
 import { CarType } from '../rating/types/car.type';
 
@@ -21,9 +21,9 @@ export class PublicationService {
     }
 
     const publicationState = {
-      id: data.id,
+      externalCarId: data.externalCarId,
       isAdNew: true,
-    };
+    } as EventData;
 
     this.eventEmitter.emit(
       'fragment',
