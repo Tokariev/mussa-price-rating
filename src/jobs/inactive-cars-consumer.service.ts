@@ -31,6 +31,10 @@ export class InactiveCarsConsumerService {
 
     const parsedData = await this.parserService.parseUrl(source);
 
+    console.log('🚀 Job done after 60 sec => got parsed data');
+    console.log('--- externalCarId', parsedData.externalCarId);
+    console.log('------price_rating', parsedData.price_rating);
+
     this.ratingService.processRating(parsedData);
     this.carAccidentService.processCarAccident(parsedData);
     // this.priceHistoryService.processPriceHistory(parsedData);

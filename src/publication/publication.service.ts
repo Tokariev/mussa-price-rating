@@ -33,7 +33,7 @@ export class PublicationService {
 
   isPublicationNew = async (data: CarType): Promise<boolean> => {
     if (data.source.includes('mobile.de')) {
-      return await this.isPublicationOnline(data);
+      return await this.isMobilePublicationNew(data);
     }
 
     if (
@@ -78,35 +78,19 @@ export class PublicationService {
     return false;
   };
 
-  isPublicationOnline = async (data: CarType): Promise<boolean> => {
-    const config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: data.source,
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/118.0',
-        Accept:
-          'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate, br',
-        Referer: 'https://www.google.com/',
-        Connection: 'keep-alive',
-        'Upgrade-Insecure-Requests': '1',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'cross-site',
-        'Sec-Fetch-User': '?1',
-        TE: 'trailers',
+  isMobilePublicationNew = async (data: CarType): Promise<boolean> => {
+    const response = await axios.post(
+      'https://makkizentral.de/api/parser/parse-not-emit',
+      {
+        url: data.source,
+        action: 'checkIfCarIsAvailable',
       },
-    };
+    );
 
-    try {
-      await axios(config);
-      // Exception will be thrown if publication is offline
-      return false;
-    } catch (error) {
+    if (response.data.ad_status === 'NOT_AVAILABLE_YET') {
       return true;
     }
+
+    return false;
   };
 }

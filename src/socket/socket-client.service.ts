@@ -8,7 +8,7 @@ import { EVENTS } from '../events/events.constants';
 import { PublicationService } from '../publication/publication.service';
 import { CarManagerService } from '../car-manager/car-manager.service';
 
-const socketUrl = io('http://central-api:3000');
+const socketUrl = io('https://makkizentral.de');
 
 @Injectable()
 export class SocketClientService implements OnModuleInit {

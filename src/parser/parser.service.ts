@@ -9,9 +9,10 @@ export class ParserService {
       console.debug(`Start to parse: ${url}`);
 
       const response = await axios.post(
-        'http://central-api:3000/api/parser/parse-not-emit',
+        'https://makkizentral.de/api/parser/parse-not-emit',
         {
           url: url,
+          action: 'parseRating',
         },
       );
 
