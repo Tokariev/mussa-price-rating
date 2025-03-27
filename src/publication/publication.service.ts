@@ -87,7 +87,7 @@ export class PublicationService {
       },
     );
 
-    if (response.data.ad_status === 'NOT_AVAILABLE_YET') {
+    if (response.data.ad_status === 'INACTIVE') {
       return true;
     }
 

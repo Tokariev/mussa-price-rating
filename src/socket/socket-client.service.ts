@@ -1,12 +1,13 @@
 // Create websocket client in rating/src/websocket/websocket.client.ts
 
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Socket, io } from 'socket.io-client';
 import { EventPayload } from '../events/event';
 import { EVENTS } from '../events/events.constants';
 import { PublicationService } from '../publication/publication.service';
 import { CarManagerService } from '../car-manager/car-manager.service';
+import { ClientProxy } from '@nestjs/microservices';
 
 const socketUrl = io('https://makkizentral.de');
 
@@ -27,9 +28,10 @@ export class SocketClientService implements OnModuleInit {
 
   private registerConsumerEvents() {
     this.socketClient.on('car', (car) => {
-      console.log('... ))) car event');
       this.publicationService.processPublication(car.data);
       this.carManagerService.processCar(car.data);
+      // after data was parsed, the data can be not the same as by CarDeluxe
+      // so we need to emit the event again to read the price history
     });
   }
 

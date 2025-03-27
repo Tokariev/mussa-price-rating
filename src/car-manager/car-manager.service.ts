@@ -5,6 +5,7 @@ import { InactiveCarProducerService } from '../jobs/inactive-cars-producer.servi
 import { CarType } from '../rating/types/car.type';
 import { RatingService } from '../rating/rating.service';
 import { ParserService } from '../parser/parser.service';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class CarManagerService {
@@ -17,6 +18,7 @@ export class CarManagerService {
     private readonly carAccidentService: CarAccidentService,
     @Inject(ParserService)
     private readonly parserService: ParserService,
+    @Inject('NATS_SERVICE') private readonly natsClient: ClientProxy,
   ) {}
 
   //TODO: Split in two methods rating and car accident
@@ -27,6 +29,7 @@ export class CarManagerService {
     }
 
     if (car.source.includes('kleinanzeigen')) {
+      this.natsClient.emit('read_price_history', car);
       return;
     }
 
@@ -94,6 +97,7 @@ export class CarManagerService {
     const parsedData = await this.parserService.parseUrl(car.source);
     this.ratingService.processRating(parsedData);
     this.carAccidentService.processCarAccident(parsedData);
+    this.natsClient.emit('read_price_history', parsedData);
   }
 
   hasRating(car: CarType): boolean {

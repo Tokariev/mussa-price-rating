@@ -27,17 +27,11 @@ export class InactiveCarsConsumerService {
     const { source } = job.data;
 
     console.log('⏰ Start parsing in as job...', job.id);
-    console.log('Source:', source);
 
     const parsedData = await this.parserService.parseUrl(source);
 
-    console.log('🚀 Job done after 60 sec => got parsed data');
-    console.log('--- externalCarId', parsedData.externalCarId);
-    console.log('------price_rating', parsedData.price_rating);
-
     this.ratingService.processRating(parsedData);
     this.carAccidentService.processCarAccident(parsedData);
-    // this.priceHistoryService.processPriceHistory(parsedData);
     this.natsClient.emit('read_price_history', parsedData);
   }
 }
