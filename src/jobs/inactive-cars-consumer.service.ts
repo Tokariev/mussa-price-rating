@@ -30,6 +30,11 @@ export class InactiveCarsConsumerService {
 
     const parsedData = await this.parserService.parseUrl(source);
 
+    if (!parsedData) {
+      console.log('🚧 No data parsed');
+      return;
+    }
+
     this.ratingService.processRating(parsedData);
     this.carAccidentService.processCarAccident(parsedData);
     this.natsClient.emit('read_price_history', parsedData);
