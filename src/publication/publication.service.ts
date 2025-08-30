@@ -79,16 +79,21 @@ export class PublicationService {
   };
 
   isMobilePublicationNew = async (data: CarType): Promise<boolean> => {
-    const response = await axios.post(
-      'https://makkizentral.de/api/parser/parse-not-emit',
-      {
-        url: data.source,
-        action: 'checkIfCarIsAvailable',
-      },
-    );
+    try {
+      const response = await axios.post(
+        'https://makkizentral.de/api/parser/parse-not-emit',
+        {
+          url: data.source,
+          action: 'checkIfCarIsAvailable',
+        },
+      );
 
-    if (response.data.ad_status === 'INACTIVE') {
-      return true;
+      if (response.data.ad_status === 'INACTIVE') {
+        return true;
+      }
+    } catch (error) {
+      console.error('Error checking mobile publication');
+      return false;
     }
 
     return false;
