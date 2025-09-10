@@ -70,15 +70,19 @@ export class CarManagerService {
       return true;
     }
 
-    const response = await axios.post(
-      'https://makkizentral.de/api/parser/parse-not-emit',
-      {
-        url: car.source,
-        action: 'checkIsCarOnline',
-      },
-    );
+    try {
+      const response = await axios.post(
+        'https://makkizentral.de/api/parser/parse-not-emit',
+        {
+          url: car.source,
+          action: 'checkIsCarOnline',
+        },
+      );
 
-    if (response.data.ad_status === 'ACTIVE') {
+      if (response.data.ad_status === 'ACTIVE') {
+        return true;
+      }
+    } catch (error) {
       return true;
     }
 
