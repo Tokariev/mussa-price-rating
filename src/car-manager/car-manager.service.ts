@@ -33,6 +33,10 @@ export class CarManagerService {
       return;
     }
 
+    if (car.url.includes('hs-preview.cardeluxe.net')) {
+      this.natsClient.emit('read_price_history', car);
+    }
+
     if (car.source.includes('mobile.de')) {
       const isCarOnline = await this.isCarOnline(car);
 
